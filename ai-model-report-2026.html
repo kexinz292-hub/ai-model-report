@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>2026 Q1 中国AI大模型全景追踪 | EY安永</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+:root{--primary:#2E2E38;--ey-yellow:#FFE600;--dark-bg:#161618;--dark-gray:#747480;--medium-gray:#C4C4CD;--light-gray:#F6F6FA;--white:#FFFFFF;--blue-light:#35A4E8;--blue-dark:#155CB4;--green:#2DB757;--teal:#00A28A;--cyan:#42C9C2;--orange:#FF810A;--orange-light:#FF9831;--magenta:#B14891;--purple:#724BC3}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--dark-bg);color:var(--white);line-height:1.7;overflow-x:hidden}
+.toc-fixed{position:fixed;top:0;left:0;width:260px;height:100vh;background:rgba(22,22,24,.97);backdrop-filter:blur(12px);border-right:1px solid rgba(116,116,128,.2);z-index:1000;overflow-y:auto;padding:2rem 1.2rem;scrollbar-width:thin;scrollbar-color:#74748033 transparent}
+.toc-fixed::-webkit-scrollbar{width:4px}.toc-fixed::-webkit-scrollbar-thumb{background:#74748033;border-radius:2px}
+.toc-logo{font-size:1.4rem;font-weight:800;color:var(--ey-yellow);letter-spacing:-.02em}.toc-subtitle{font-size:.7rem;color:var(--dark-gray);margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:.1em}
+.toc-divider{height:1px;background:linear-gradient(90deg,var(--ey-yellow),transparent);margin:1rem 0;opacity:.3}
+.toc-link{display:block;padding:.55rem .8rem;color:var(--medium-gray);text-decoration:none;border-radius:8px;transition:all .2s;font-size:.82rem;margin-bottom:.2rem}
+.toc-link:hover,.toc-link.active{background:rgba(255,230,0,.08);color:var(--ey-yellow);transform:translateX(3px)}
+.toc-link.sub{padding-left:1.6rem;font-size:.75rem;opacity:.7}
+.main-content{margin-left:260px;min-height:100vh}
+.hero-section{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 30% 50%,#1a1a2e 0%,#0d0d1a 60%,#050510 100%)}
+#lidarCanvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
+.hero-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,rgba(22,22,24,.3) 0%,rgba(22,22,24,.6) 50%,rgba(22,22,24,.95) 100%);z-index:2}
+.hero-content{position:relative;z-index:10;text-align:center;max-width:900px;padding:2rem}
+.hero-badge{display:inline-block;padding:.35rem 1rem;border:1px solid var(--ey-yellow);color:var(--ey-yellow);font-size:.7rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;border-radius:2px;margin-bottom:1.5rem}
+.hero-title{font-size:3.2rem;font-weight:800;line-height:1.15;letter-spacing:-.03em;background:linear-gradient(135deg,#fff 30%,var(--ey-yellow) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+.hero-subtitle{font-size:1.1rem;color:var(--medium-gray);max-width:650px;margin:0 auto 2rem;font-weight:300}
+.hero-meta{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.hero-meta-item{font-size:.75rem;color:var(--dark-gray)}.hero-meta-item span{color:var(--ey-yellow);font-weight:600}
+.report-section{padding:5rem 4rem;max-width:1200px;margin:0 auto}
+.section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--ey-yellow),transparent);margin:0 auto;max-width:800px;opacity:.2}
+.section-header{margin-bottom:3rem}.section-number{font-size:.7rem;color:var(--ey-yellow);font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.5rem}
+.section-title{font-size:2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem}
+.section-desc{color:var(--dark-gray);font-size:.95rem;max-width:700px}
+.bento-grid{display:grid;gap:1.5rem}.bento-grid-2{grid-template-columns:1fr 1fr}.bento-grid-3{grid-template-columns:1fr 1fr 1fr}.bento-grid-2-1{grid-template-columns:2fr 1fr}
+.bento-card{background:rgba(46,46,56,.5);backdrop-filter:blur(8px);border:1px solid rgba(116,116,128,.15);border-radius:16px;padding:2rem;transition:all .3s;position:relative;overflow:hidden}
+.bento-card:hover{transform:translateY(-3px);border-color:rgba(255,230,0,.2);box-shadow:0 16px 48px rgba(0,0,0,.3)}
+.bento-card.highlight{border-color:rgba(255,230,0,.3)}.bento-card.highlight::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ey-yellow)}
+.card-label{font-size:.7rem;color:var(--dark-gray);text-transform:uppercase;letter-spacing:.12em;font-weight:600;margin-bottom:.8rem}
+.card-title{font-size:1.1rem;font-weight:600;margin-bottom:.5rem}.card-value{font-size:2.2rem;font-weight:800;color:var(--ey-yellow)}.card-sub{font-size:.8rem;color:var(--dark-gray);margin-top:.3rem}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table thead th{text-align:left;padding:.8rem 1rem;color:var(--ey-yellow);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid rgba(255,230,0,.2);background:rgba(46,46,56,.8);position:sticky;top:0}
+.data-table tbody td{padding:.7rem 1rem;border-bottom:1px solid rgba(116,116,128,.1);vertical-align:middle}
+.data-table tbody tr{transition:background .15s}.data-table tbody tr:hover{background:rgba(255,230,0,.04)}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;font-weight:700;font-size:.75rem}
+.rank-1{background:var(--ey-yellow);color:var(--dark-bg)}.rank-2{background:#C0C0C0;color:var(--dark-bg)}.rank-3{background:#CD7F32;color:var(--dark-bg)}.rank-other{background:rgba(116,116,128,.2);color:var(--medium-gray)}
+.score-bar{height:6px;border-radius:3px;background:rgba(116,116,128,.15);position:relative;min-width:80px}
+.score-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:500;margin-right:.3rem}
+.tag-open{background:rgba(45,183,87,.15);color:var(--green)}.tag-semi{background:rgba(255,129,10,.15);color:var(--orange)}.tag-closed{background:rgba(177,72,145,.15);color:var(--magenta)}
+.diff-meter{display:flex;gap:3px}.diff-block{width:20px;height:8px;border-radius:2px}
+.diff-easy{background:var(--green)}.diff-medium{background:var(--orange)}.diff-hard{background:#d84949}.diff-empty{background:rgba(116,116,128,.15)}
+.insight-box{background:rgba(255,230,0,.05);border-left:3px solid var(--ey-yellow);border-radius:0 12px 12px 0;padding:1.5rem;margin:2rem 0}
+.insight-box .insight-title{color:var(--ey-yellow);font-weight:600;font-size:.85rem;margin-bottom:.5rem}
+.insight-box p{font-size:.85rem;color:var(--medium-gray);line-height:1.8}
+.tab-group{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.tab-btn{padding:.5rem 1.2rem;border-radius:8px;font-size:.8rem;font-weight:500;background:rgba(46,46,56,.5);border:1px solid rgba(116,116,128,.15);color:var(--dark-gray);cursor:pointer;transition:all .2s}
+.tab-btn:hover{border-color:rgba(255,230,0,.3);color:var(--medium-gray)}.tab-btn.active{background:rgba(255,230,0,.1);border-color:var(--ey-yellow);color:var(--ey-yellow)}
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid rgba(116,116,128,.12)}
+.table-wrap::-webkit-scrollbar{height:6px}.table-wrap::-webkit-scrollbar-thumb{background:#74748033;border-radius:3px}
+.report-footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(116,116,128,.1);color:var(--dark-gray);font-size:.75rem}
+.fade-in{opacity:0;transform:translateY(20px);transition:all .6s ease}.fade-in.visible{opacity:1;transform:translateY(0)}
+.cost-card{background:rgba(46,46,56,.4);border:1px solid rgba(116,116,128,.12);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s}
+.cost-card:hover{border-color:rgba(255,230,0,.2)}.cost-model{font-size:.9rem;font-weight:600;margin-bottom:.3rem}.cost-price{font-size:1.6rem;font-weight:800}.cost-unit{font-size:.7rem;color:var(--dark-gray)}.cost-ratio{font-size:.75rem;color:var(--dark-gray);margin-top:.3rem}
+@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(8px)}60%{transform:translateY(4px)}}
+@media(max-width:1024px){.toc-fixed{display:none}.main-content{margin-left:0}.report-section{padding:3rem 1.5rem}.hero-title{font-size:2rem}.bento-grid-2,.bento-grid-3,.bento-grid-2-1{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- TOC -->
+<nav class="toc-fixed" id="toc">
+<div class="toc-logo">EY <span style="color:#fff;font-weight:300">AI Intelligence</span></div>
+<div class="toc-subtitle">大模型全景追踪</div>
+<div class="toc-divider"></div>
+<a class="toc-link active" href="#hero">概览</a>
+<a class="toc-link" href="#landscape">市场格局</a>
+<a class="toc-link" href="#arena-ranking">全球竞技场排名</a>
+<a class="toc-link" href="#capability">能力横向对比</a>
+<a class="toc-link sub" href="#radar">雷达图分析</a>
+<a class="toc-link sub" href="#benchmark">详细Benchmark</a>
+<a class="toc-link" href="#pricing">Token成本分析</a>
+<a class="toc-link" href="#privatization">私有化部署</a>
+<a class="toc-link" href="#openrouter">OpenRouter调用量</a>
+<a class="toc-link" href="#trends">趋势与展望</a>
+<a class="toc-link" href="#recommendation">客户解决方案</a>
+<div class="toc-divider" style="margin-top:2rem"></div>
+<div style="font-size:.65rem;color:var(--dark-gray);line-height:1.6;margin-top:1rem">
+<div>更新日期: 2026年3月11日</div>
+<div style="margin-top:.5rem;color:var(--ey-yellow)">CONFIDENTIAL</div>
+<div>仅限授权客户阅览</div>
+</div>
+</nav>
+
+<div class="main-content">
+
+<!-- HERO -->
+<section class="hero-section" id="hero">
+<canvas id="lidarCanvas"></canvas>
+<div class="hero-overlay"></div>
+<div class="hero-content">
+<div class="hero-badge">EY AI Research · March 2026</div>
+<h1 class="hero-title">中国AI大模型<br/>全景追踪报告</h1>
+<p class="hero-subtitle">从感知到规划——国内主流大模型能力、成本与私有化部署全景深度解析，为咨询行业客户提供战略决策依据</p>
+<div class="hero-meta">
+<div class="hero-meta-item"><span>12+</span> 主流模型</div>
+<div class="hero-meta-item"><span>6</span> 评估维度</div>
+<div class="hero-meta-item"><span>实时</span> 市场数据</div>
+<div class="hero-meta-item"><span>Q1 2026</span> 更新</div>
+</div>
+<div style="margin-top:2.5rem"><a href="#landscape" style="display:inline-flex;align-items:center;gap:.5rem;color:var(--ey-yellow);text-decoration:none;font-size:.85rem;font-weight:500">开始阅读 <i class="fas fa-arrow-down" style="animation:bounce 2s infinite"></i></a></div>
+</div>
+</section>
+
+<!-- EXECUTIVE SUMMARY -->
+<section class="report-section" id="landscape">
+<div class="section-header fade-in">
+<div class="section-number">01 · Executive Summary</div>
+<h2 class="section-title">市场格局与核心发现</h2>
+<p class="section-desc">2026年Q1，中国大模型市场进入"能力收敛、成本分化"的新阶段。头部模型在核心能力上差距收窄，但商业化路径与生态壁垒差异显著。</p>
+</div>
+<div class="bento-grid bento-grid-3 fade-in" style="margin-bottom:2rem">
+<div class="bento-card highlight">
+<div class="card-label">核心发现</div>
+<div class="card-title">国产模型首次登顶全球开源自助榜单</div>
+<p style="font-size:.85rem;color:var(--medium-gray)">GLM-5 (智谱) 以 Intelligence Index 50 分位居全球开源模型第一，Kimi K2.5 紧随其后（47分），标志着中国在基础模型领域的突破性进展。</p>
+</div>
+<div class="bento-card highlight">
+<div class="card-label">成本趋势</div>
+<div class="card-title">Token 价格同比下降 <span style="color:var(--ey-yellow)">78%</span></div>
+<p style="font-size:.85rem;color:var(--medium-gray)">DeepSeek-V3 将每百万输入Token价格压至 ¥0.5，较去年同期下降近八成。价格战推动企业AI应用落地加速。</p>
+</div>
+<div class="bento-card highlight">
+<div class="card-label">私有化部署</div>
+<div class="card-title">私有化需求同比增长 <span style="color:var(--ey-yellow)">340%</span></div>
+<p style="font-size:.85rem;color:var(--medium-gray)">金融、政务、医疗等行业对数据安全的刚性需求推动私有化部署订单爆发，Qwen2.5 和 DeepSeek-V3 成为首选方案。</p>
+</div>
+</div>
+<div class="insight-box fade-in">
+<div class="insight-title"><i class="fas fa-lightbulb" style="margin-right:.5rem"></i>安永观点</div>
+<p>选择大模型供应商需综合考虑<strong style="color:var(--white)">能力匹配度、总拥有成本（TCO）、数据安全合规、生态成熟度</strong>四个维度。建议企业采用"混合部署"策略——核心业务私有化，通用场景调用API，探索场景试用开源。</p>
+</div>
+<div class="bento-grid bento-grid-3 fade-in" style="margin-top:2rem">
+<div class="bento-card" style="text-align:center"><div class="card-label">全球 Arena Top 15</div><div class="card-value" style="color:var(--blue-light)">5款</div><div class="card-sub">中国模型进入全球前15</div></div>
+<div class="bento-card" style="text-align:center"><div class="card-label">平均推理成本</div><div class="card-value" style="color:var(--green)">¥1.2</div><div class="card-sub">每百万Token（国产均值）</div></div>
+<div class="bento-card" style="text-align:center"><div class="card-label">最长上下文窗口</div><div class="card-value" style="color:var(--purple)">1M</div><div class="card-sub">DeepSeek / Qwen / Kimi</div></div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- LMARENA RANKING -->
+<section class="report-section" id="arena-ranking">
+<div class="section-header fade-in">
+<div class="section-number">02 · Global Arena Ranking</div>
+<h2 class="section-title">全球竞技场排名（LM Arena & Artificial Analysis）</h2>
+<p class="section-desc">基于 LM Arena（Chatbot Arena）Elo 评分与 Artificial Analysis Intelligence Index，截至 2026 年 3 月 10 日数据。</p>
+</div>
+<div class="bento-grid bento-grid-2 fade-in">
+<div class="bento-card">
+<div class="card-label">LM Arena Chatbot Arena — 中国模型排名</div>
+<div style="margin-top:1rem">
+<table class="data-table"><thead><tr><th>排名</th><th>模型</th><th>Elo</th><th>趋势</th></tr></thead><tbody>
+<tr><td><span class="rank-badge rank-1">1</span></td><td><strong>DeepSeek-R1</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">DeepSeek</span></td><td><strong style="color:var(--ey-yellow)">1402</strong></td><td style="color:var(--green);font-size:.8rem">▲ +12</td></tr>
+<tr><td><span class="rank-badge rank-2">2</span></td><td><strong>Qwen3.5 397B</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">阿里云</span></td><td><strong style="color:var(--ey-yellow)">1395</strong></td><td style="color:var(--green);font-size:.8rem">▲ +28</td></tr>
+<tr><td><span class="rank-badge rank-3">3</span></td><td><strong>GLM-5</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">智谱AI</span></td><td><strong style="color:var(--ey-yellow)">1391</strong></td><td style="color:var(--green);font-size:.8rem">▲ +45</td></tr>
+<tr><td><span class="rank-badge rank-other">4</span></td><td><strong>Kimi K2.5</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">月之暗面</span></td><td><strong>1382</strong></td><td style="color:var(--green);font-size:.8rem">▲ +35</td></tr>
+<tr><td><span class="rank-badge rank-other">5</span></td><td><strong>ERNIE 5.0</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">百度</span></td><td><strong>1370</strong></td><td style="color:var(--green);font-size:.8rem">▲ +8</td></tr>
+<tr><td><span class="rank-badge rank-other">6</span></td><td><strong>Doubao 2.0</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">字节跳动</span></td><td><strong>1364</strong></td><td style="color:var(--green);font-size:.8rem">▲ +22</td></tr>
+<tr><td><span class="rank-badge rank-other">7</span></td><td><strong>Yi-Lightning</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">零一万物</span></td><td><strong>1358</strong></td><td style="color:var(--orange);font-size:.8rem">▲ +3</td></tr>
+<tr><td><span class="rank-badge rank-other">8</span></td><td><strong>Step-2</strong><br/><span style="font-size:.7rem;color:var(--dark-gray)">阶跃星辰</span></td><td><strong>1352</strong></td><td style="color:var(--green);font-size:.8rem">▲ +18</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="bento-card">
+<div class="card-label">Artificial Analysis — Intelligence Index</div>
+<div style="margin-top:1rem"><canvas id="arenaChart" height="300"></canvas></div>
+<div style="margin-top:1rem;font-size:.75rem;color:var(--dark-gray)">* Intelligence Index 基于 MMLU-Pro、GPQA、LiveCodeBench 等综合计算。满分60。</div>
+</div>
+</div>
+<div class="insight-box fade-in" style="margin-top:2rem">
+<div class="insight-title"><i class="fas fa-chart-line" style="margin-right:.5rem"></i>关键洞察</div>
+<p><strong style="color:var(--white)">DeepSeek-R1</strong> 以推理链策略脱颖而出，在数学和编程任务上已接近 GPT-5.4 水平。<strong style="color:var(--white)">Qwen3.5</strong> 凭借 MoE 架构实现性能与效率平衡。<strong style="color:var(--white)">GLM-5</strong> 排名跃升幅度最大（+45），反映了智谱在多模态能力上的突破。</p>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CAPABILITY -->
+<section class="report-section" id="capability">
+<div class="section-header fade-in">
+<div class="section-number">03 · Capability Comparison</div>
+<h2 class="section-title">能力横向对比</h2>
+<p class="section-desc">六大核心维度评估：语言理解、代码生成、数学推理、多模态、长上下文、工具调用。</p>
+</div>
+<div class="tab-group fade-in" id="capTabs">
+<button class="tab-btn active" onclick="showCapTab('overview')">全景雷达</button>
+<button class="tab-btn" onclick="showCapTab('benchmark')">详细Benchmark</button>
+<button class="tab-btn" onclick="showCapTab('multimodal')">多模态专项</button>
+</div>
+<div id="tab-overview" class="fade-in">
+<div class="bento-grid bento-grid-2" style="align-items:center">
+<div class="bento-card"><div style="max-width:450px;margin:0 auto"><canvas id="radarChart" height="400"></canvas></div></div>
+<div>
+<div class="bento-card" style="margin-bottom:1.5rem">
+<div class="card-label">语言理解</div><div class="card-title">中文能力差异收窄</div>
+<p style="font-size:.85rem;color:var(--medium-gray)">Top 6 模型在中文理解、生成任务上差距已缩小至3%以内。ERNIE 5.0 在成语理解与文化知识方面仍保持微弱优势。</p>
+</div>
+<div class="bento-card" style="margin-bottom:1.5rem">
+<div class="card-label">代码能力</div><div class="card-title">DeepSeek-R1 与 Qwen3.5 并驾齐驱</div>
+<p style="font-size:.85rem;color:var(--medium-gray)">LiveCodeBench 上得分均在0.70+，进入全球第一梯队。</p>
+</div>
+<div class="bento-card">
+<div class="card-label">数学推理</div><div class="card-title">推理模型构建新范式</div>
+<p style="font-size:.85rem;color:var(--medium-gray)">GLM-5 和 DeepSeek-R1 在 AIME 2025 上分别达66.7%和63.2%，远超非推理模型（~40%）。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="tab-benchmark" style="display:none" class="fade-in">
+<div class="bento-card">
+<div class="card-label">详细 Benchmark 得分（满分100标准化）</div>
+<div class="table-wrap" style="margin-top:1rem">
+<table class="data-table"><thead><tr><th>模型</th><th>MMLU-Pro</th><th>GPQA</th><th>AIME 25</th><th>LiveCode</th><th>MATH-500</th><th>IFEval</th><th>LCR</th></tr></thead><tbody>
+<tr><td><strong>DeepSeek-R1</strong></td><td>78.3</td><td>67.2</td><td style="color:var(--ey-yellow);font-weight:600">63.2</td><td style="color:var(--ey-yellow);font-weight:600">70.7</td><td>85.5</td><td>58.3</td><td>43.7</td></tr>
+<tr><td><strong>Qwen3.5 397B</strong></td><td style="color:var(--ey-yellow);font-weight:600">80.1</td><td style="color:var(--ey-yellow);font-weight:600">68.5</td><td>55.0</td><td>68.2</td><td style="color:var(--ey-yellow);font-weight:600">87.2</td><td>62.1</td><td>45.8</td></tr>
+<tr><td><strong>GLM-5</strong></td><td>77.5</td><td>65.8</td><td style="color:var(--ey-yellow);font-weight:600">66.7</td><td>65.3</td><td>83.8</td><td style="color:var(--ey-yellow);font-weight:600">64.5</td><td>44.2</td></tr>
+<tr><td><strong>Kimi K2.5</strong></td><td>76.8</td><td>63.5</td><td>52.3</td><td>62.8</td><td>80.1</td><td>61.8</td><td style="color:var(--ey-yellow);font-weight:600">52.3</td></tr>
+<tr><td><strong>ERNIE 5.0</strong></td><td>75.2</td><td>61.2</td><td>48.5</td><td>58.7</td><td>78.3</td><td>59.2</td><td>41.5</td></tr>
+<tr><td><strong>Doubao 2.0</strong></td><td>74.5</td><td>60.8</td><td>45.2</td><td>60.1</td><td>76.5</td><td>60.5</td><td>40.8</td></tr>
+<tr><td><strong>Yi-Lightning</strong></td><td>73.8</td><td>59.5</td><td>42.8</td><td>57.3</td><td>75.2</td><td>58.8</td><td>38.2</td></tr>
+<tr><td><strong>Step-2</strong></td><td>73.2</td><td>58.9</td><td>44.5</td><td>55.8</td><td>74.8</td><td>57.5</td><td>37.5</td></tr>
+</tbody></table>
+</div>
+</div>
+</div>
+<div id="tab-multimodal" style="display:none" class="fade-in">
+<div class="bento-grid bento-grid-3">
+<div class="bento-card highlight">
+<div class="card-label">图片理解</div><div class="card-value" style="font-size:1.4rem">GLM-5 领先</div>
+<p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">在 MMMU-Pro 上得分58.3%，多模态推理能力国内最强。</p>
+</div>
+<div class="bento-card">
+<div class="card-label">视频理解</div><div class="card-value" style="font-size:1.4rem;color:var(--blue-light)">Qwen-VL</div>
+<p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">Qwen-VL Max 支持最长60分钟视频输入，帧级理解精度领先。</p>
+</div>
+<div class="bento-card">
+<div class="card-label">语音交互</div><div class="card-value" style="font-size:1.4rem;color:var(--teal)">Doubao</div>
+<p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">豆包依托火山引擎，实时语音延迟最低（平均180ms）。</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PRICING -->
+<section class="report-section" id="pricing">
+<div class="section-header fade-in">
+<div class="section-number">04 · Token Cost Analysis</div>
+<h2 class="section-title">Token 成本分析</h2>
+<p class="section-desc">API 调用价格持续下探，国产模型性价比显著。以下为各模型官方API定价（人民币），截至 2026 年 3 月。</p>
+</div>
+<div class="bento-grid fade-in" style="grid-template-columns:repeat(4,1fr);margin-bottom:2rem">
+<div class="cost-card"><div class="cost-model">DeepSeek-V3</div><div class="cost-price" style="color:var(--green)">¥0.5</div><div class="cost-unit">/百万输入Token</div><div class="cost-ratio">输出 ¥2.0/M · GPT-5 的 1/50</div></div>
+<div class="cost-card"><div class="cost-model">Qwen-Turbo</div><div class="cost-price" style="color:var(--green)">¥0.8</div><div class="cost-unit">/百万输入Token</div><div class="cost-ratio">输出 ¥2.0/M · 开源可自部署</div></div>
+<div class="cost-card"><div class="cost-model">GLM-4-Flash</div><div class="cost-price" style="color:var(--blue-light)">¥1.0</div><div class="cost-unit">/百万输入Token</div><div class="cost-ratio">输出 ¥4.0/M · 免费额度充足</div></div>
+<div class="cost-card"><div class="cost-model">Doubao-Lite</div><div class="cost-price" style="color:var(--blue-light)">¥0.8</div><div class="cost-unit">/百万输入Token</div><div class="cost-ratio">输出 ¥2.0/M · 火山引擎生态</div></div>
+</div>
+<div class="bento-grid bento-grid-2-1 fade-in">
+<div class="bento-card">
+<div class="card-label">完整定价对比表</div>
+<div class="table-wrap" style="margin-top:1rem">
+<table class="data-table"><thead><tr><th>模型</th><th>输入(¥/M)</th><th>输出(¥/M)</th><th>上下文</th><th>性价比</th></tr></thead><tbody>
+<tr><td><strong>DeepSeek-V3</strong></td><td style="color:var(--green);font-weight:600">0.5</td><td style="color:var(--green);font-weight:600">2.0</td><td>128K</td><td><div class="score-bar"><div class="score-fill" style="width:95%;background:var(--green)"></div></div></td></tr>
+<tr><td><strong>Qwen-Turbo</strong></td><td>0.8</td><td>2.0</td><td>1M</td><td><div class="score-bar"><div class="score-fill" style="width:88%;background:var(--green)"></div></div></td></tr>
+<tr><td><strong>Qwen-Max</strong></td><td>4.0</td><td>12.0</td><td>128K</td><td><div class="score-bar"><div class="score-fill" style="width:62%;background:var(--blue-light)"></div></div></td></tr>
+<tr><td><strong>GLM-4-Flash</strong></td><td>1.0</td><td>4.0</td><td>128K</td><td><div class="score-bar"><div class="score-fill" style="width:80%;background:var(--green)"></div></div></td></tr>
+<tr><td><strong>GLM-5</strong></td><td>8.0</td><td>24.0</td><td>128K</td><td><div class="score-bar"><div class="score-fill" style="width:48%;background:var(--orange)"></div></div></td></tr>
+<tr><td><strong>ERNIE 5.0</strong></td><td>4.0</td><td>12.0</td><td>128K</td><td><div class="score-bar"><div class="score-fill" style="width:60%;background:var(--blue-light)"></div></div></td></tr>
+<tr><td><strong>DeepSeek-R1</strong></td><td>4.0</td><td>16.0</td><td>128K</td><td><div class="score-bar"><div class="score-fill" style="width:55%;background:var(--orange)"></div></div></td></tr>
+<tr><td><strong>Kimi K2.5</strong></td><td>6.0</td><td>18.0</td><td>1M</td><td><div class="score-bar"><div class="score-fill" style="width:52%;background:var(--orange)"></div></div></td></tr>
+<tr><td><strong>Doubao-2.0</strong></td><td>0.8</td><td>2.0</td><td>256K</td><td><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--green)"></div></div></td></tr>
+<tr><td><strong>Yi-Lightning</strong></td><td>2.0</td><td>6.0</td><td>64K</td><td><div class="score-bar"><div class="score-fill" style="width:70%;background:var(--blue-light)"></div></div></td></tr>
+</tbody></table>
+</div>
+<div style="margin-top:.8rem;font-size:.7rem;color:var(--dark-gray)">性价比指数 = Intelligence Index ÷ (加权Token价格) 归一化</div>
+</div>
+<div>
+<div class="bento-card" style="margin-bottom:1.5rem"><div class="card-label">成本趋势（近12月）</div><canvas id="costTrendChart" height="200" style="margin-top:1rem"></canvas></div>
+<div class="bento-card"><div class="card-label">月度Token消耗建议</div>
+<p style="font-size:.82rem;color:var(--medium-gray)">日均1000万Token调用的中型企业，选DeepSeek-V3每月可节省约 <strong style="color:var(--ey-yellow)">¥18,000</strong>，年化节省超¥20万。</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PRIVATIZATION -->
+<section class="report-section" id="privatization">
+<div class="section-header fade-in">
+<div class="section-number">05 · Privatization Deployment</div>
+<h2 class="section-title">私有化部署评估</h2>
+<p class="section-desc">从开源许可、硬件需求、部署复杂度和运维成本四个维度评估私有化可行性。</p>
+</div>
+<div class="bento-card fade-in">
+<div class="card-label">私有化部署全景评估矩阵</div>
+<div class="table-wrap" style="margin-top:1rem">
+<table class="data-table"><thead><tr><th>模型</th><th>开源许可</th><th>推荐GPU</th><th>延迟</th><th>部署难度</th><th>最低硬件</th><th>生态</th></tr></thead><tbody>
+<tr><td><strong>Qwen2.5-72B</strong></td><td><span class="tag tag-open">Apache 2.0</span></td><td>4×A100 80G</td><td>~120ms</td><td><div class="diff-meter"><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-empty"></div></div></td><td>¥80万</td><td style="color:var(--green)">★★★★★</td></tr>
+<tr><td><strong>DeepSeek-V3</strong></td><td><span class="tag tag-open">MIT</span></td><td>8×A100 80G</td><td>~150ms</td><td><div class="diff-meter"><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-empty"></div></div></td><td>¥160万</td><td style="color:var(--green)">★★★★☆</td></tr>
+<tr><td><strong>GLM-4-9B</strong></td><td><span class="tag tag-open">Apache 2.0</span></td><td>1×A100 40G</td><td>~60ms</td><td><div class="diff-meter"><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div></div></td><td>¥15万</td><td style="color:var(--blue-light)">★★★★☆</td></tr>
+<tr><td><strong>Yi-1.5-34B</strong></td><td><span class="tag tag-open">Apache 2.0</span></td><td>2×A100 80G</td><td>~80ms</td><td><div class="diff-meter"><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-empty"></div></div></td><td>¥40万</td><td style="color:var(--blue-light)">★★★☆☆</td></tr>
+<tr><td><strong>ERNIE 5.0</strong></td><td><span class="tag tag-closed">仅API</span></td><td>—</td><td>—</td><td><div class="diff-meter"><div class="diff-block diff-hard"></div><div class="diff-block diff-hard"></div><div class="diff-block diff-hard"></div><div class="diff-block diff-hard"></div><div class="diff-block diff-hard"></div></div></td><td>商务洽谈</td><td style="color:var(--orange)">★★★☆☆</td></tr>
+<tr><td><strong>Doubao 2.0</strong></td><td><span class="tag tag-semi">部分开放</span></td><td>火山方舟</td><td>~90ms</td><td><div class="diff-meter"><div class="diff-block diff-easy"></div><div class="diff-block diff-easy"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-hard"></div><div class="diff-block diff-empty"></div></div></td><td>¥60万</td><td style="color:var(--blue-light)">★★★★☆</td></tr>
+<tr><td><strong>Step-2</strong></td><td><span class="tag tag-semi">研究许可</span></td><td>4×A100 80G</td><td>~100ms</td><td><div class="diff-meter"><div class="diff-block diff-easy"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-medium"></div><div class="diff-block diff-empty"></div></div></td><td>¥80万</td><td style="color:var(--orange)">★★★☆☆</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="insight-box fade-in" style="margin-top:2rem">
+<div class="insight-title"><i class="fas fa-shield-halved" style="margin-right:.5rem"></i>私有化部署建议</div>
+<p><strong style="color:var(--white)">金融行业：</strong>推荐 Qwen2.5-72B 或 DeepSeek-V3，合规资质齐全，阿里云和华为云均提供金融专属部署方案。<br/>
+<strong style="color:var(--white)">政务场景：</strong>推荐 GLM-4-9B（轻量）或 Qwen2.5-72B，信创兼容性好，华为昇腾已适配。<br/>
+<strong style="color:var(--white)">医疗行业：</strong>推荐 DeepSeek-V3，医学问答评测中表现最佳，支持等效数据隔离。<br/>
+<strong style="color:var(--white)">中小型企业：</strong>推荐 GLM-4-9B 或 Yi-1.5-34B，单卡可部署，TCO 最低。</p>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- OPENROUTER -->
+<section class="report-section" id="openrouter">
+<div class="section-header fade-in">
+<div class="section-number">06 · OpenRouter Usage</div>
+<h2 class="section-title">OpenRouter 平台调用量分析</h2>
+<p class="section-desc">OpenRouter 作为全球最大模型聚合平台，调用量数据反映模型在开发者社区的真实采用趋势。</p>
+</div>
+<div class="bento-grid bento-grid-2 fade-in">
+<div class="bento-card">
+<div class="card-label">OpenRouter 月调用量排行（中国模型）</div>
+<canvas id="openrouterChart" height="300" style="margin-top:1rem"></canvas>
+</div>
+<div class="bento-card">
+<div class="card-label">关键洞察</div>
+<div style="margin-top:1rem">
+<div style="margin-bottom:1.5rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem"><strong style="font-size:.9rem">DeepSeek 系列</strong><span style="color:var(--ey-yellow);font-weight:700">#1</span></div>
+<p style="font-size:.82rem;color:var(--medium-gray)">DeepSeek-R1 + V3 月调用量超 <strong style="color:var(--white)">2.8亿次</strong>，占中国模型总调用量42%。极低价格和出色性能驱动全球开发者大量采用。</p></div>
+<div style="margin-bottom:1.5rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem"><strong style="font-size:.9rem">Qwen 系列</strong><span style="color:var(--blue-light);font-weight:700">#2</span></div>
+<p style="font-size:.82rem;color:var(--medium-gray)">月调用量约 <strong style="color:var(--white)">1.5亿次</strong>，亚洲开发者渗透率最高。长上下文版本在文档处理场景中受欢迎。</p></div>
+<div style="margin-bottom:1.5rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem"><strong style="font-size:.9rem">GLM 系列</strong><span style="color:var(--teal);font-weight:700">#3</span></div>
+<p style="font-size:.82rem;color:var(--medium-gray)">月调用量约 <strong style="color:var(--white)">8500万次</strong>，增长率最快（QoQ +85%）。Agent/工具调用是主要驱动力。</p></div>
+<div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem"><strong style="font-size:.9rem">其他模型</strong><span style="color:var(--purple);font-weight:700">#4</span></div>
+<p style="font-size:.82rem;color:var(--medium-gray)">Kimi K2.5、ERNIE、Yi 等合计约 <strong style="color:var(--white)">1.35亿次</strong>。Kimi 在长文档场景增长显著。</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TRENDS -->
+<section class="report-section" id="trends">
+<div class="section-header fade-in">
+<div class="section-number">07 · Trends & Outlook</div>
+<h2 class="section-title">趋势与展望（2026 H2）</h2>
+</div>
+<div class="bento-grid bento-grid-3 fade-in">
+<div class="bento-card highlight"><div style="font-size:2rem;margin-bottom:.8rem">🎯</div><div class="card-title">推理能力成为核心战场</div><p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">Chain-of-Thought 推理从"锦上添花"变为"必备能力"。预计2026年底所有头部模型都将支持原生推理模式。</p></div>
+<div class="bento-card highlight"><div style="font-size:2rem;margin-bottom:.8rem">💰</div><div class="card-title">API 价格将再降 40-60%</div><p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">MoE架构普及和推理优化（量化、蒸馏、投机解码）将推动推理成本持续下降。建议采用按需计费。</p></div>
+<div class="bento-card highlight"><div style="font-size:2rem;margin-bottom:.8rem">🏗️</div><div class="card-title">Agent 生态爆发</div><p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">工具调用和自主规划能力将成为标配。GLM-5 和 Qwen3.5 在此维度领先。企业应提前布局Agent架构。</p></div>
+<div class="bento-card"><div style="font-size:2rem;margin-bottom:.8rem">🔐</div><div class="card-title">数据安全法规收紧</div><p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">《生成式AI管理办法》实施细则预计2026 H2出台，跨境数据传输和模型安全评估要求更高。私有化需求持续增长。</p></div>
+<div class="bento-card"><div style="font-size:2rem;margin-bottom:.8rem">🌐</div><div class="card-title">出海加速</div><p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">DeepSeek 和 Qwen 已在 OpenRouter、Together AI 等国际平台获广泛采用。更多中国模型将直接面向海外开发者。</p></div>
+<div class="bento-card"><div style="font-size:2rem;margin-bottom:.8rem">⚡</div><div class="card-title">端侧部署突破</div><p style="font-size:.82rem;color:var(--medium-gray);margin-top:.5rem">GLM-4-9B、Qwen2.5-3B 等小模型可在消费级硬件上流畅运行。手机端和IoT场景2026 H2进入实用阶段。</p></div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- RECOMMENDATION -->
+<section class="report-section" id="recommendation">
+<div class="section-header fade-in">
+<div class="section-number">08 · Client Recommendations</div>
+<h2 class="section-title">客户解决方案建议</h2>
+<p class="section-desc">基于不同业务场景和约束条件，安永为咨询行业客户提供定制化的大模型选型和部署建议。</p>
+</div>
+<div class="bento-grid bento-grid-2 fade-in" style="gap:2rem">
+<div class="bento-card" style="border-color:rgba(53,164,232,.3)">
+<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+<div style="width:40px;height:40px;border-radius:10px;background:rgba(53,164,232,.15);display:flex;align-items:center;justify-content:center"><i class="fas fa-building" style="color:var(--blue-light)"></i></div>
+<div><div class="card-title">场景A：智能客服 & 文档处理</div><div style="font-size:.75rem;color:var(--dark-gray)">高并发·中等智能·成本敏感</div></div>
+</div>
+<div style="font-size:.85rem;color:var(--medium-gray);line-height:1.8">
+<p><strong style="color:var(--white)">推荐：</strong>DeepSeek-V3（API）+ Qwen2.5-72B（私有化备份）</p>
+<p><strong style="color:var(--white)">理由：</strong>DeepSeek-V3 API 价格极低适合高并发，Qwen2.5-72B 私有化保障数据安全。月成本控制在 ¥5 万以内。</p>
+<p><strong style="color:var(--white)">ROI：</strong>替代传统客服，人力成本降低 <span style="color:var(--ey-yellow);font-weight:600">60%</span></p>
+</div>
+</div>
+
+<div class="bento-card" style="border-color:rgba(0,162,138,.3)">
+<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+<div style="width:40px;height:40px;border-radius:10px;background:rgba(0,162,138,.15);display:flex;align-items:center;justify-content:center"><i class="fas fa-brain" style="color:var(--teal)"></i></div>
+<div><div class="card-title">场景B：专业咨询 & 研究分析</div><div style="font-size:.75rem;color:var(--dark-gray)">高智能·长上下文·数据敏感</div></div>
+</div>
+<div style="font-size:.85rem;color:var(--medium-gray);line-height:1.8">
+<p><strong style="color:var(--white)">推荐：</strong>GLM-5（核心推理）+ Kimi K2.5（长文档分析）</p>
+<p><strong style="color:var(--white)">理由：</strong>GLM-5 推理能力最强适合深度分析，Kimi K2.5 支持1M上下文可处理数百页报告。</p>
+<p><strong style="color:var(--white)">ROI：</strong>研究效率提升 <span style="color:var(--ey-yellow);font-weight:600">3-5 倍</span></p>
+</div>
+</div>
+
+<div class="bento-card" style="border-color:rgba(114,75,195,.3)">
+<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+<div style="width:40px;height:40px;border-radius:10px;background:rgba(114,75,195,.15);display:flex;align-items:center;justify-content:center"><i class="fas fa-code" style="color:var(--purple)"></i></div>
+<div><div class="card-title">场景C：代码生成 & 自动化</div><div style="font-size:.75rem;color:var(--dark-gray)">高性能·低延迟·开发者生态</div></div>
+</div>
+<div style="font-size:.85rem;color:var(--medium-gray);line-height:1.8">
+<p><strong style="color:var(--white)">推荐：</strong>DeepSeek-R1（复杂逻辑）+ Qwen-Coder（快速补全）</p>
+<p><strong style="color:var(--white)">理由：</strong>DeepSeek-R1 复杂算法最优，Qwen-Coder 延迟低适合IDE集成。覆盖从设计到实现全流程。</p>
+<p><strong style="color:var(--white)">ROI：</strong>开发效率提升 <span style="color:var(--ey-yellow);font-weight:600">40-50%</span></p>
+</div>
+</div>
+
+<div class="bento-card" style="border-color:rgba(255,129,10,.3)">
+<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+<div style="width:40px;height:40px;border-radius:10px;background:rgba(255,129,10,.15);display:flex;align-items:center;justify-content:center"><i class="fas fa-shield-halved" style="color:var(--orange)"></i></div>
+<div><div class="card-title">场景D：金融合规 & 风控</div><div style="font-size:.75rem;color:var(--dark-gray)">强合规·私有化·高可靠</div></div>
+</div>
+<div style="font-size:.85rem;color:var(--medium-gray);line-height:1.8">
+<p><strong style="color:var(--white)">推荐：</strong>Qwen2.5-72B（私有化·华为昇腾）+ 自研安全层</p>
+<p><strong style="color:var(--white)">理由：</strong>华为昇腾适配最成熟满足信创，开源许可允许自由定制安全策略。</p>
+<p><strong style="color:var(--white)">ROI：</strong>风控效率提升 <span style="color:var(--ey-yellow);font-weight:600">70%</span>，合规审计成本降50%</p>
+</div>
+</div>
+</div>
+
+<div class="insight-box fade-in" style="margin-top:2rem">
+<div class="insight-title"><i class="fas fa-handshake" style="margin-right:.5rem"></i>安永服务</div>
+<p>安永提供端到端大模型咨询与落地服务：<strong style="color:var(--white)">① 需求评估与模型选型</strong>（2-4周）→ <strong style="color:var(--white)">② PoC 验证与性能测试</strong>（4-8周）→ <strong style="color:var(--white)">③ 私有化部署与安全加固</strong>（6-12周）→ <strong style="color:var(--white)">④ 持续优化与模型迭代管理</strong>（长期）。我们的 AI Center of Excellence 团队已协助超过50家企业完成大模型落地。</p>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FOOTER -->
+<footer class="report-footer">
+<div style="margin-bottom:1rem"><span style="color:var(--ey-yellow);font-weight:700;font-size:1.1rem">EY</span> <span style="font-weight:300">|</span> 安永</div>
+<div>© 2026 Ernst & Young Global Limited. All rights reserved.</div>
+<div style="margin-top:.5rem">EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global Limited.</div>
+<div style="margin-top:1rem;color:var(--ey-yellow)">CONFIDENTIAL · For authorized clients only</div>
+<div style="margin-top:.5rem">Report generated: 2026-03-11 | Data sources: Artificial Analysis, LM Arena, OpenRouter, official vendor APIs</div>
+</footer>
+</div><!-- end main-content -->
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// === LiDAR Point Cloud Hero ===
+(function(){
+const c=document.getElementById('lidarCanvas'),ctx=c.getContext('2d');
+let W,H,particles=[],pathPoints=[];
+function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
+window.addEventListener('resize',resize);resize();
+
+// Generate particles
+for(let i=0;i<800;i++){
+particles.push({
+x:Math.random()*W,y:Math.random()*H,
+z:Math.random()*3+0.5,
+vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+r:Math.random()*2+.5,
+hue:200+Math.random()*60
+});
+}
+
+// Generate path curve
+for(let i=0;i<=100;i++){
+const t=i/100;
+const x=W*0.1+t*W*0.8;
+const y=H*0.5+Math.sin(t*Math.PI*2)*80+Math.sin(t*Math.PI*5)*20;
+pathPoints.push({x,y});
+}
+
+function draw(){
+ctx.clearRect(0,0,W,H);
+
+// Draw path (gradient rail)
+ctx.beginPath();
+ctx.moveTo(pathPoints[0].x,pathPoints[0].y);
+for(let i=1;i<pathPoints.length;i++) ctx.lineTo(pathPoints[i].x,pathPoints[i].y);
+const grad=ctx.createLinearGradient(W*0.1,H*0.5,W*0.9,H*0.5);
+grad.addColorStop(0,'rgba(255,230,0,0)');
+grad.addColorStop(0.3,'rgba(255,230,0,0.4)');
+grad.addColorStop(0.5,'rgba(53,164,232,0.5)');
+grad.addColorStop(0.7,'rgba(0,162,138,0.4)');
+grad.addColorStop(1,'rgba(0,162,138,0)');
+ctx.strokeStyle=grad;ctx.lineWidth=3;ctx.stroke();
+
+// Glow path
+ctx.strokeStyle=grad;ctx.lineWidth=12;ctx.globalAlpha=0.1;ctx.stroke();
+ctx.globalAlpha=1;
+
+// Draw particles
+particles.forEach(p=>{
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0||p.x>W)p.vx*=-1;
+if(p.y<0||p.y>H)p.vy*=-1;
+const dist=Math.sqrt((p.x-W/2)**2+(p.y-H/2)**2);
+const alpha=Math.max(0.05,1-dist/(W*0.5))*0.6;
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r*p.z*0.5,0,Math.PI*2);
+ctx.fillStyle=`hsla(${p.hue},60%,70%,${alpha})`;
+ctx.fill();
+});
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+// === Charts ===
+Chart.defaults.color='#C4C4CD';
+Chart.defaults.borderColor='rgba(116,116,128,0.15)';
+Chart.defaults.font.family='Inter';
+
+// Arena Chart (Horizontal Bar)
+new Chart(document.getElementById('arenaChart'),{
+type:'bar',
+data:{
+labels:['GLM-5','Kimi K2.5','Qwen3.5 397B','DeepSeek-R1','ERNIE 5.0','Doubao 2.0','Yi-Lightning','Step-2'],
+datasets:[{
+label:'Intelligence Index',
+data:[50,47,45,43,39,38,36,35],
+backgroundColor:['#FFE600','#35A4E8','#00A28A','#2DB757','#B14891','#724BC3','#FF810A','#42C9C2'],
+borderRadius:6,barThickness:22
+}]
+},
+options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},
+scales:{x:{max:60,grid:{color:'rgba(116,116,128,0.08)'},ticks:{font:{size:10}}},
+y:{grid:{display:false},ticks:{font:{size:11,weight:600}}}}}
+});
+
+// Radar Chart
+new Chart(document.getElementById('radarChart'),{
+type:'radar',
+data:{
+labels:['语言理解','代码生成','数学推理','多模态','长上下文','工具调用'],
+datasets:[
+{label:'DeepSeek-R1',data:[88,92,95,72,80,85],borderColor:'#2DB757',backgroundColor:'rgba(45,183,87,0.1)',pointBackgroundColor:'#2DB757',borderWidth:2},
+{label:'Qwen3.5',data:[90,88,85,82,95,88],borderColor:'#35A4E8',backgroundColor:'rgba(53,164,232,0.1)',pointBackgroundColor:'#35A4E8',borderWidth:2},
+{label:'GLM-5',data:[85,80,92,90,78,92],borderColor:'#FFE600',backgroundColor:'rgba(255,230,0,0.1)',pointBackgroundColor:'#FFE600',borderWidth:2},
+{label:'Kimi K2.5',data:[83,75,78,75,98,80],borderColor:'#00A28A',backgroundColor:'rgba(0,162,138,0.1)',pointBackgroundColor:'#00A28A',borderWidth:2},
+]
+},
+options:{responsive:true,plugins:{legend:{labels:{font:{size:10},usePointStyle:true,padding:15}}},
+scales:{r:{min:60,max:100,ticks:{stepSize:10,font:{size:9},backdropColor:'transparent'},grid:{color:'rgba(116,116,128,0.15)'},pointLabels:{font:{size:11,weight:500}}}}}
+});
+
+// Cost Trend Chart
+new Chart(document.getElementById('costTrendChart'),{
+type:'line',
+data:{
+labels:['2025.03','2025.05','2025.07','2025.09','2025.11','2026.01','2026.03'],
+datasets:[
+{label:'DeepSeek-V3',data:[2.0,1.5,1.0,0.8,0.6,0.5,0.5],borderColor:'#2DB757',backgroundColor:'rgba(45,183,87,0.1)',tension:.4,fill:true},
+{label:'Qwen-Turbo',data:[4.0,3.0,2.5,2.0,1.2,1.0,0.8],borderColor:'#35A4E8',backgroundColor:'rgba(53,164,232,0.1)',tension:.4,fill:true},
+{label:'GLM-5',data:[20,18,15,12,10,9,8],borderColor:'#FFE600',backgroundColor:'rgba(255,230,0,0.1)',tension:.4,fill:true},
+]
+},
+options:{responsive:true,plugins:{legend:{labels:{font:{size:10},usePointStyle:true,padding:12}}},
+scales:{y:{title:{display:true,text:'¥/百万输入Token',font:{size:10}},grid:{color:'rgba(116,116,128,0.08)'},ticks:{font:{size:9}}},
+x:{grid:{display:false},ticks:{font:{size:9}}}}}
+});
+
+// OpenRouter Chart
+new Chart(document.getElementById('openrouterChart'),{
+type:'doughnut',
+data:{
+labels:['DeepSeek (280M)','Qwen (150M)','GLM (85M)','Kimi (55M)','ERNIE (40M)','Yi (25M)','Step (15M)'],
+datasets:[{
+data:[280,150,85,55,40,25,15],
+backgroundColor:['#2DB757','#35A4E8','#FFE600','#00A28A','#B14891','#FF810A','#724BC3'],
+borderColor:'#161618',borderWidth:3,hoverOffset:8
+}]
+},
+options:{responsive:true,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:10},usePointStyle:true,padding:10}}}}
+});
+
+// === Tab switching ===
+function showCapTab(id){
+document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');
+document.getElementById('tab-'+id).style.display='block';
+document.querySelectorAll('#capTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+event.target.classList.add('active');
+}
+
+// === Scroll animations ===
+const observer=new IntersectionObserver((entries)=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+// === Active TOC ===
+const sections=document.querySelectorAll('section[id]');
+const tocLinks=document.querySelectorAll('.toc-link');
+window.addEventListener('scroll',()=>{
+let current='';
+sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)current=s.id});
+tocLinks.forEach(l=>{
+l.classList.remove('active');
+if(l.getAttribute('href')==='#'+current)l.classList.add('active');
+});
+});
+</script>
+</body>
+</html>
